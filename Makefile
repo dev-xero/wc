@@ -3,11 +3,11 @@ BUILD_DIR := ./build
 $(shell mkdir -p $(BUILD_DIR))
 
 build:
-	gcc -o $(BUILD_DIR)/xwc ./xwc.c
+	gcc -o $(BUILD_DIR)/wc ./wc.c
 
 .PHONY: build
 
 run: build
-	./$(BUILD_DIR)/xwc
+	./$(BUILD_DIR)/wc -c test.txt
 
 .PHONY: run
