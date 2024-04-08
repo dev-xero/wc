@@ -1,6 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 
+int getByteCount(FILE *fptr)
+{
+    int count = 0;
+    while (fgetc(fptr) != EOF)
+    {
+        ++count;
+    }
+    return count;
+}
+
 int main(int argc, char **argv)
 {
     if (argc > 2)
@@ -13,14 +23,11 @@ int main(int argc, char **argv)
         if (strcmp(flag, "-c") == 0)
         {
             fptr = fopen(filePath, "r");
-            if (fptr == NULL) return 1;
-            
-            int count = 0;
-            while (fgetc(fptr) != EOF)
-            {
-                ++count;
-            }
-            printf("\t%d %s", count, filePath);
+            if (fptr == NULL)
+                return 1;
+                
+            int bytes = getByteCount(fptr);
+            printf("\t%d %s", bytes, filePath);
         }
     }
 
