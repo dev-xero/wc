@@ -1,51 +1,70 @@
+/* HEADER FILES */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 
-// Word count states
-#define IN 1
-#define OUT 0
+/* HEADER FILES END */
 
+/* DEFINE DIRECTIVES */
+
+#define IN 1  // Inside a word
+#define OUT 0 // Outside a word
+
+/* DEFINE DIRECTIVES END*/
+
+/**
+ *  Returns the number of bytes present in a file
+ *  @param *fptr: A pointer to the file stream
+ */
 int getByteCount(FILE *fptr)
 {
     int count = 0;
+
     while (fgetc(fptr) != EOF)
-    {
         ++count;
-    }
+
+    rewind(fptr); // Resets the cursor to the file stream beginning
     return count;
 }
 
+/**
+ *  Returns the number of new lines (line count)
+ *  @param *fptr: A pointer to the file stream
+ */
 int getLineCount(FILE *fptr)
 {
     int count = 0;
     char c;
 
-    while (c != EOF)
+    while ((c = fgetc(fptr) != EOF))
     {
-        c = fgetc(fptr);
         if (c == '\n')
-        {
             ++count;
-        }
     }
 
+    rewind(fptr); // Resets the cursor to the file stream beginning
     return count;
 }
 
+/**
+ *   Returns number of words in a file
+ *   @param *fptr: A pointer to the file stream
+ */
 int getWordCount(FILE *fptr)
 {
+    int STATE = OUT; // Monitors whether the cursor is in a word or not
     int count = 0;
     char c;
 
-    int STATE = OUT;
-
     while ((c = fgetc(fptr)) != EOF)
     {
+        // If we encounter whitespace, we've exited a word
         if (isspace(c))
             STATE = OUT;
 
+        // If we're not in a word currently, increase word count
         else if (STATE == OUT)
         {
             ++count;
@@ -53,11 +72,19 @@ int getWordCount(FILE *fptr)
         }
     }
 
-    rewind(fptr);
-
+    rewind(fptr); // Resets the cursor to the file stream beginning
     return count;
 }
 
+/**
+ *  Program entry point
+ *  Accepts an option flag and optionally a file name to print useful statistics
+ *
+ * Flags:
+ *  - `-c`: Prints the number of bytes present in the file
+ *  - `-l`: Prints the number of lines in the file
+ *  - `-w`: Prints the number of words present in the file
+ */
 int main(int argc, char **argv)
 {
     if (argc > 2)
@@ -66,29 +93,28 @@ int main(int argc, char **argv)
         char *filePath = argv[2];
         FILE *fptr;
 
-        // Open file for reading
-        fptr = fopen(filePath, "r");
+        fptr = fopen(filePath, "r"); // Pointer to the file stream
         if (fptr == NULL)
         {
             perror("Failed to read file");
             exit(EXIT_FAILURE);
         }
 
-        // -c flag counts bytes
+        // -c counts bytes
         if (strcmp(flag, "-c") == 0)
         {
             int bytes = getByteCount(fptr);
             printf("\t%d %s", bytes, filePath);
         }
 
-        // -l flag counts lines
+        // -l counts lines
         if (strcmp(flag, "-l") == 0)
         {
             int lines = getLineCount(fptr);
             printf("\t%d %s", lines, filePath);
         }
 
-        // -w flag counts words
+        // -w counts words
         if (strcmp(flag, "-w") == 0)
         {
             int words = getWordCount(fptr);
