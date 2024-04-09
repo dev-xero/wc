@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 /* HEADER FILES END */
 
@@ -95,6 +96,32 @@ int getCharCount(FILE *fptr)
     return count;
 }
 
+void printStats(char *flag, int lines, int words, int chars, int bytes, char *filePath)
+{
+    switch (flag[1])
+    {
+    case 'l':
+        printf("%d", lines);
+        break;
+
+    case 'w':
+        printf("%d", words);
+        break;
+
+    case 'm':
+        printf("%d", chars);
+        break;
+
+    case 'c':
+        printf("%d", bytes);
+        break;
+
+    default:
+        printf("\t%d %d %d %s", lines, words, bytes, filePath);
+        break;
+    }
+}
+
 /**
  *  Program entry point
  *  Accepts an option flag and optionally a file name to print useful statistics
@@ -106,69 +133,57 @@ int getCharCount(FILE *fptr)
  */
 int main(int argc, char **argv)
 {
-    if (argc > 2)
+    int ch;
+    int lines = 0, words = 0, chars = 0, bytes = 0;
+    int state = 0;
+
+    if (argc < 3)
     {
-        char *flag = argv[1];
-        char *filePath = argv[2];
-        FILE *fptr;
-
-        fptr = fopen(filePath, "r"); // Pointer to the file stream
-        if (fptr == NULL)
+        char *arg = argv[1];
+        if (arg[0] == '-')
         {
-            perror("Failed to read file");
-            exit(EXIT_FAILURE);
-        }
+            while ((ch = getchar()) != EOF)
+            {
+                ++bytes;
 
-        // -c counts bytes
-        if (strcmp(flag, "-c") == 0)
-        {
-            int bytes = getByteCount(fptr);
-            printf("\t%d %s", bytes, filePath);
-        }
+                if (ch == '\n')
+                    ++lines;
 
-        // -l counts lines
-        if (strcmp(flag, "-l") == 0)
-        {
-            int lines = getLineCount(fptr);
-            printf("\t%d %s", lines, filePath);
-        }
+                if ((ch & 0xC0) != 0x80)
+                    ++chars;
 
-        // -w counts words
-        if (strcmp(flag, "-w") == 0)
-        {
-            int words = getWordCount(fptr);
-            printf("\t%d %s", words, filePath);
-        }
+                if (isspace(ch))
+                    state = 0;
 
-        // -m counts characters
-        if (strcmp(flag, "-m") == 0)
-        {
-            int chars = getCharCount(fptr);
-            printf("\t%d %s", chars, filePath);
-        }
+                else if (state == 0)
+                {
+                    ++words;
+                    state = 1;
+                }
+            }
 
-        fclose(fptr); // Close the file stream
+            printStats(arg, lines, words, chars, bytes, "");
+        }
     }
-    // default case, no flags specified
-    else if (argc == 2)
+    else if (argc == 3)
     {
-        int lineCount, wordCount, byteCount;
+        char *flag = argv[2];
         char *filePath = argv[1];
         FILE *fptr;
 
-        fptr = fopen(filePath, "r"); // Pointer to the file stream
+        fptr = fopen(filePath, "r");
         if (fptr == NULL)
         {
             perror("Failed to read file");
             exit(EXIT_FAILURE);
         }
 
-        lineCount = getLineCount(fptr);
-        wordCount = getWordCount(fptr);
-        byteCount = getByteCount(fptr);
+        lines = getLineCount(fptr);
+        words = getWordCount(fptr);
+        chars = getCharCount(fptr);
+        bytes = getByteCount(fptr);
 
-        printf("\t%d %d %d %s", lineCount, wordCount, byteCount, filePath);
-        fclose(fptr); // Close the file stream
+        printStats(flag, lines, words, chars, bytes, filePath);
     }
 
     return 0;
