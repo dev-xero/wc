@@ -25,9 +25,9 @@ wc expects a `flag` and `filepath` argument.
 ./build/wc [-FLAG] [FILEPATH]
 ```
 
-### Flags
+## Flags
 
-### 1. `-c`: Returns the number of bytes in the specified file.
+### 1. `-c`: Prints the byte count.
 
   Example:
 
@@ -39,4 +39,46 @@ wc expects a `flag` and `filepath` argument.
 
   ```bash
     342190 test.txt
+  ```
+
+### 2. `-l`: Prints the line count.
+
+  Example:
+
+  ```bash
+  ./build/wc -l test.txt
+  ```
+
+  Produces:
+
+  ```bash
+    7145 test.txt
+  ```
+
+### 3. `-w`: Prints the word count.
+
+  Example:
+
+  ```bash
+  ./build/wc -w test.txt
+  ```
+
+  Produces:
+
+  ```bash
+    58164 test.txt
+  ```
+
+### 4. `-m`: Prints the UTF-8 character count.
+
+  Example:
+
+  ```bash
+  ./build/wc -m test.txt
+  ```
+
+  Produces:
+
+  ```bash
+    339292 test.txt
   ```
