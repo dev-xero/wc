@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
 
+// Word count states
 #define IN 1
 #define OUT 0
 
@@ -67,7 +69,10 @@ int main(int argc, char **argv)
         // Open file for reading
         fptr = fopen(filePath, "r");
         if (fptr == NULL)
-            return 1;
+        {
+            perror("Failed to read file");
+            exit(EXIT_FAILURE);
+        }
 
         // -c flag counts bytes
         if (strcmp(flag, "-c") == 0)
