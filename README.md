@@ -19,10 +19,18 @@ make build
 
 ## Usage
 
-wc expects a `flag` and `filepath` argument.
+wc expects an optional `flag` and `filepath` argument.
 
 ```bash
 ./build/wc [-FLAG] [FILEPATH]
+```
+
+Example
+
+```bash
+./build/wc test.txt
+
+7145 58164 342190 test.txt
 ```
 
 ## Flags
@@ -33,12 +41,8 @@ wc expects a `flag` and `filepath` argument.
 
   ```bash
   ./build/wc -c test.txt
-  ```
 
-  Produces:
-
-  ```bash
-    342190 test.txt
+  342190 test.txt
   ```
 
 ### 2. `-l`: Prints the line count.
@@ -47,14 +51,10 @@ wc expects a `flag` and `filepath` argument.
 
   ```bash
   ./build/wc -l test.txt
+
+  7145 test.txt
   ```
-
-  Produces:
-
-  ```bash
-    7145 test.txt
-  ```
-
+  
 ### 3. `-w`: Prints the word count.
 
   Example:
@@ -75,10 +75,6 @@ wc expects a `flag` and `filepath` argument.
 
   ```bash
   ./build/wc -m test.txt
-  ```
 
-  Produces:
-
-  ```bash
-    339292 test.txt
+   339292 test.txt
   ```
