@@ -137,7 +137,7 @@ int main(int argc, char **argv)
     int lines = 0, words = 0, chars = 0, bytes = 0;
     int state = 0;
 
-    if (argc < 3)
+    if (argc == 2)
     {
         char *arg = argv[1];
         if (arg[0] == '-')
@@ -163,6 +163,25 @@ int main(int argc, char **argv)
             }
 
             printStats(arg, lines, words, chars, bytes, "");
+        }
+        else
+        {
+            char *filePath = argv[1];
+            FILE *fptr;
+
+            fptr = fopen(filePath, "r");
+            if (fptr == NULL)
+            {
+                perror("Failed to read file");
+                exit(EXIT_FAILURE);
+            }
+
+            lines = getLineCount(fptr);
+            words = getWordCount(fptr);
+            chars = getCharCount(fptr);
+            bytes = getByteCount(fptr);
+
+            printStats("", lines, words, chars, bytes, filePath);
         }
     }
     else if (argc == 3)
