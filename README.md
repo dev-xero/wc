@@ -61,12 +61,8 @@ Example
 
   ```bash
   ./build/wc -w test.txt
-  ```
 
-  Produces:
-
-  ```bash
-    58164 test.txt
+  58164 test.txt
   ```
 
 ### 4. `-m`: Prints the UTF-8 character count.
