@@ -77,6 +77,25 @@ int getWordCount(FILE *fptr)
 }
 
 /**
+ *   Returns number of UTF-8 characters in a file stream
+ *   @param *fptr: A pointer to the file stream
+ */
+int getCharCount(FILE *fptr)
+{
+    int count = 0;
+    int c;
+
+    while ((c = fgetc(fptr)) != EOF)
+        // Bit-wise AND to check the most significant bits
+        // of c isn't a leading byte sequence '1100..'
+        if ((c & 0xC0) != 0x80)
+            ++count;
+
+    rewind(fptr);
+    return count;
+}
+
+/**
  *  Program entry point
  *  Accepts an option flag and optionally a file name to print useful statistics
  *
@@ -119,6 +138,13 @@ int main(int argc, char **argv)
         {
             int words = getWordCount(fptr);
             printf("\t%d %s", words, filePath);
+        }
+
+        // -m counts characters
+        if (strcmp(flag, "-m") == 0)
+        {
+            int chars = getCharCount(fptr);
+            printf("\t%d %s", chars, filePath);
         }
     }
 
