@@ -146,6 +146,29 @@ int main(int argc, char **argv)
             int chars = getCharCount(fptr);
             printf("\t%d %s", chars, filePath);
         }
+
+        fclose(fptr); // Close the file stream
+    }
+    // default case, no flags specified
+    else if (argc == 2)
+    {
+        int lineCount, wordCount, byteCount;
+        char *filePath = argv[1];
+        FILE *fptr;
+
+        fptr = fopen(filePath, "r"); // Pointer to the file stream
+        if (fptr == NULL)
+        {
+            perror("Failed to read file");
+            exit(EXIT_FAILURE);
+        }
+
+        lineCount = getLineCount(fptr);
+        wordCount = getWordCount(fptr);
+        byteCount = getByteCount(fptr);
+
+        printf("\t%d %d %d %s", lineCount, wordCount, byteCount, filePath);
+        fclose(fptr); // Close the file stream
     }
 
     return 0;
