@@ -38,7 +38,7 @@ int getLineCount(FILE *fptr)
     int count = 0;
     char c;
 
-    while ((c = fgetc(fptr) != EOF))
+    while ((c = fgetc(fptr)) != EOF)
     {
         if (c == '\n')
             ++count;
